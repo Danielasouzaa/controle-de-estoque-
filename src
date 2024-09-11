@@ -1,0 +1,54 @@
+CREATE DATABASE SistemaControleEstoque;
+USE SistemaControleEstoque;
+
+DROP DATABASE SistemaControleEstoque;
+CREATE DATABASE SistemaControleEstoque;
+USE SistemaControleEstoque;
+
+CREATE TABLE Fornecedores (
+    id_fornecedor INT AUTO_INCREMENT PRIMARY KEY,
+    nome_fornecedor VARCHAR(100) NOT NULL,
+    telefone VARCHAR(15),
+    email VARCHAR(100)
+);
+
+CREATE TABLE Produtos (
+    id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    nome_produto VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10, 2) NOT NULL,
+    quantidade_estoque INT NOT NULL,
+    id_fornecedor INT,
+    FOREIGN KEY (id_fornecedor) REFERENCES Fornecedores(id_fornecedor)
+);
+
+CREATE TABLE PedidosReposicao (
+    id_pedido INT AUTO_INCREMENT PRIMARY KEY,
+    id_produto INT,
+    quantidade_pedida INT NOT NULL,
+    data_pedido DATE NOT NULL,
+    FOREIGN KEY (id_produto) REFERENCES Produtos(id_produto)
+);
+
+INSERT INTO Fornecedores (nome_fornecedor, telefone, email)
+VALUES ('Fornecedor A', '123456789', 'fornecedorA@email.com'),
+       ('Fornecedor B', '987654321', 'fornecedorB@email.com');
+
+INSERT INTO Produtos (nome_produto, descricao, preco, quantidade_estoque, id_fornecedor)
+VALUES ('Produto X', 'Descrição do Produto X', 50.00, 20, 1),
+       ('Produto Y', 'Descrição do Produto Y', 75.00, 10, 2);
+
+INSERT INTO PedidosReposicao (id_produto, quantidade_pedida, data_pedido)
+VALUES (1, 50, '2024-09-01'),
+       (2, 30, '2024-09-05');
+
+SELECT p.nome_produto, p.preco, p.quantidade_estoque, f.nome_fornecedor
+FROM Produtos p
+JOIN Fornecedores f ON p.id_fornecedor = f.id_fornecedor;
+
+UPDATE Produtos
+SET quantidade_estoque = 15
+WHERE id_produto = 1;
+
+DELETE FROM PedidosReposicao
+WHERE id_pedido = 1;
